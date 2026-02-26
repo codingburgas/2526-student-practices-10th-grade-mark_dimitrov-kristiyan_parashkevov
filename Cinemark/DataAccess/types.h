@@ -1,16 +1,13 @@
 #pragma once
-
 #include <string>
 
-struct ProjectionInfo
-{
+struct ProjectionInfo {
     std::string date;
     int hall;
     std::string cinema;
 };
 
-struct Film
-{
+struct Film {
     std::string title;
     int yearReleased;
     std::string length;
