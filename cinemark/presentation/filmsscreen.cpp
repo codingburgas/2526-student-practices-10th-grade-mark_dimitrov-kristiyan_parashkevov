@@ -4,7 +4,9 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QLineEdit>
-#include <QTableWidget>
+#include <QTableView>
+
+#include "testtablemodel.h"
 
 FilmsScreen::FilmsScreen(QWidget* parent)
     : QWidget(parent)
@@ -13,7 +15,11 @@ FilmsScreen::FilmsScreen(QWidget* parent)
     actionBar->addWidget(new QLineEdit);
     actionBar->addWidget(new QPushButton("+"));
 
+    QTableView* table = new QTableView(this);
+    SimpleTableModel* model = new SimpleTableModel(this);
+    table->setModel(model);
+
     QVBoxLayout* screenLayout = new QVBoxLayout(this);
     screenLayout->addLayout(actionBar);
-    screenLayout->addWidget(new QTableWidget(3, 3, this));
+    screenLayout->addWidget(table);
 }
