@@ -8,5 +8,5 @@ find_package(Qt6 REQUIRED COMPONENTS Core)
 qt_standard_project_setup()
 
 add_subdirectory(data_access)
-add_subdirectory(logic)
+add_subdirectory(business_logic)
 add_subdirectory(presentation)

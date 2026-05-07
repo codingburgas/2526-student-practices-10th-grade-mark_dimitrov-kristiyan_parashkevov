@@ -1,10 +1,11 @@
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
 qt_add_executable(app WIN32 MACOSX_BUNDLE
-    filmsscreen.h
-    filmsscreen.cpp
+    films_screen.h
+    films_screen.cpp
     main.cpp
-    mainwindow.h mainwindow.cpp
+    main_window.h
+    main_window.cpp
 )
 
-target_link_libraries(app PRIVATE logic Qt::Widgets)
+target_link_libraries(app PRIVATE business_logic Qt::Widgets)
