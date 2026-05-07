@@ -7,5 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt6 REQUIRED COMPONENTS Core)
 qt_standard_project_setup()
 
+add_subdirectory(data_access)
 add_subdirectory(logic)
 add_subdirectory(presentation)
