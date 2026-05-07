@@ -1,4 +1,4 @@
-#include "films_screen.h"
+#include "film_editor.h"
 
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -8,7 +8,7 @@
 
 #include "testtablemodel.h"
 
-FilmsScreen::FilmsScreen(QWidget* parent)
+FilmEditor::FilmEditor(QWidget* parent)
     : QWidget(parent)
 {
     QHBoxLayout* actionBar = new QHBoxLayout;
