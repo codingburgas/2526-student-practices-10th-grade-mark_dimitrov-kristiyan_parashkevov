@@ -1,7 +1,5 @@
 qt_add_library(business_logic STATIC
     types.h
-    testtablemodel.h
-    testtablemodel.cpp
 )
 
 target_link_libraries(business_logic PUBLIC Qt::Core)
