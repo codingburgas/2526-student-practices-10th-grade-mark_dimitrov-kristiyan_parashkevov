@@ -1,5 +1,3 @@
-find_package(Qt6 REQUIRED COMPONENTS Widgets)
-
 qt_add_executable(app WIN32 MACOSX_BUNDLE
     main.cpp
     main_window.h main_window.cpp
