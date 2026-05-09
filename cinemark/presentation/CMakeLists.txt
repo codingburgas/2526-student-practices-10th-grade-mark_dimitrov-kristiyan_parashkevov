@@ -6,4 +6,4 @@ qt_add_executable(app WIN32 MACOSX_BUNDLE
     film_editor.h film_editor.cpp
 )
 
-target_link_libraries(app PRIVATE business_logic Qt::Widgets)
+target_link_libraries(app PRIVATE business_logic data_access Qt::Widgets)

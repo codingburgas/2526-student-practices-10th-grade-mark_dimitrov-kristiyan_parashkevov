@@ -20,7 +20,6 @@ FilmTableModel* FilmTableModel::connect(const dbConnectionParameters& params, QO
     };
 
     QSqlDatabase connection = QSqlDatabase::addDatabase(u"QODBC"_s);
-    qDebug() << buildConnectionString();
     connection.setDatabaseName(buildConnectionString());
 
     if (!connection.open(params.username, params.password) || !ensureFilmsTable())
