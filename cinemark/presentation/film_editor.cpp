@@ -13,8 +13,8 @@ FilmEditor::FilmEditor(QWidget* parent)
     actionBar->addWidget(new QLineEdit);
     actionBar->addWidget(new QPushButton("+"));
 
-    dbConnectionParameters params = {"tcp:127.0.0.1", "glaresheen", "CEaSa9b3Qa6HaYb9ba979aJ11VQI8a"};
-    FilmTableModel* model = FilmTableModel::connect(params, this);
+    database::ConnectionParameters params = {"tcp:127.0.0.1", database::AuthenticationType::SqlPassword, "glaresheen", "CEaSa9b3Qa6HaYb9ba979aJ11VQI8a"};
+    database::FilmTableModel* model = database::FilmTableModel::connect(params, this);
     FilmTableView* table = new FilmTableView(this);
     table->setModel(model);
 

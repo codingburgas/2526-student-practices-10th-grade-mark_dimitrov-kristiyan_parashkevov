@@ -2,7 +2,9 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QStringBuilder>
+#include <QMetaEnum>
 using namespace Qt::StringLiterals;
+using namespace database;
 
 FilmTableModel::FilmTableModel(QObject* parent)
     : QSqlTableModel(parent)
@@ -11,14 +13,14 @@ FilmTableModel::FilmTableModel(QObject* parent)
     select();
 }
 
-FilmTableModel* FilmTableModel::connect(const dbConnectionParameters& params, QObject* parent)
+FilmTableModel* FilmTableModel::connect(const ConnectionParameters& params, QObject* parent)
 {
     auto buildConnectionString = [&params]() -> QString
     {
         return u"Driver=ODBC Driver 18 for SQL Server;"
                u"Server="_s % params.address % QChar(',') % QString::number(params.port) %
                u";Encrypt=yes;TrustServerCertificate=yes;"_s %
-               (params.username.isEmpty() ? u"Trusted_Connection=yes"_s : QString());
+               (params.authenticationType == Windows ? u"Trusted_Connection=yes"_s : u"Authentication="_s % QMetaEnum::fromType<AuthenticationType>().valueToKey(params.authenticationType));
     };
 
     QSqlDatabase connection = QSqlDatabase::addDatabase(u"QODBC"_s);
