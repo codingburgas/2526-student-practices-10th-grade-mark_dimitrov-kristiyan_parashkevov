@@ -1,4 +1,5 @@
 qt_add_library(data_access STATIC
+    db_connection_parameters.h
     film_table_model.h film_table_model.cpp
 )
 
