@@ -1,9 +1,30 @@
 #pragma once
 
-#include <QTableView>
+#include <QObject>
+#include <QPersistentModelIndex>
 
-class FilmTableView : public QTableView
+class QLayout;
+class QTableView;
+class FilmTableModel;
+class SeparatorDelegate;
+
+class FilmTableView : public QObject
 {
+    Q_OBJECT
+
 public:
-    explicit FilmTableView(QWidget* parent = nullptr);
+    explicit FilmTableView(QLayout* parent, FilmTableModel* = nullptr);
+
+    void setModel(FilmTableModel*);
+
+public slots:
+    void insertRow();
+    void save();
+
+private:
+    QPersistentModelIndex newRowsSeparatorIndex;
+    SeparatorDelegate* separator = nullptr;
+
+    QTableView* view;
+    FilmTableModel* model;
 };

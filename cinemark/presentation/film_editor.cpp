@@ -15,10 +15,8 @@ FilmEditor::FilmEditor(QWidget* parent)
 
     database::ConnectionParameters params = {"tcp:127.0.0.1", database::AuthenticationType::SqlPassword, "glaresheen", "CEaSa9b3Qa6HaYb9ba979aJ11VQI8a"};
     FilmTableModel* model = FilmTableModel::connect(params, this);
-    FilmTableView* table = new FilmTableView(this);
-    table->setModel(model);
 
     QVBoxLayout* screenLayout = new QVBoxLayout(this);
     screenLayout->addLayout(actionBar);
-    screenLayout->addWidget(table);
+    FilmTableView* table = new FilmTableView(screenLayout, model);
 }
