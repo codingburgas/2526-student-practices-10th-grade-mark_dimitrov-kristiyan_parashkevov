@@ -6,7 +6,7 @@
 #include <QTableView>
 #include <QPersistentModelIndex>
 
-FilmTableView::FilmTableView(QLayout* layout, FilmTableModel* model = nullptr)
+FilmTableView::FilmTableView(QLayout* layout, FilmTableModel* model)
     : QObject(layout)
     , view(new QTableView)
     , model(model)

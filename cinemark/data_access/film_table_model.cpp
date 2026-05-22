@@ -9,6 +9,7 @@ using namespace database;
 FilmTableModel::FilmTableModel(QObject* parent)
     : QSqlTableModel(parent)
 {
+    setEditStrategy(OnManualSubmit);
     setTable(u"Films"_s);
     select();
 }
