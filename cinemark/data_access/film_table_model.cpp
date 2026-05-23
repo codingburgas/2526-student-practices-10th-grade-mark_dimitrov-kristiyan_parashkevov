@@ -45,3 +45,31 @@ bool FilmTableModel::ensureFilmsTable()
 
     return true;
 }
+
+bool FilmTableModel::setHeaderData(int row, Qt::Orientation orientation, const QVariant& value, int role)
+{
+    if (orientation == Qt::Vertical)
+    {
+        if (!value.toBool())
+        {
+            blankedHeaderRows.insert(row, QHashDummyValue());
+        }
+        else
+        {
+            blankedHeaderRows.remove(row);
+        }
+        return true;
+    }
+
+    return QSqlTableModel::setHeaderData(row, orientation, value, role);
+}
+
+QVariant FilmTableModel::headerData(int row, Qt::Orientation orientation, int role) const
+{
+    if (orientation == Qt::Vertical && blankedHeaderRows.contains(row))
+    {
+        return QVariant();
+    }
+
+    return QSqlTableModel::headerData(row, orientation, role);
+}
