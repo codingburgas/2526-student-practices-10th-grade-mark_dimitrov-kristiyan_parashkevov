@@ -113,9 +113,21 @@ QVariant FilmTableModel::headerData(int row, Qt::Orientation orientation, int ro
 
 bool FilmTableModel::submitAll()
 {
+    clearChangeMarkers();
+    return QSqlTableModel::submitAll();
+}
+
+void FilmTableModel::revertAll()
+{
+    clearChangeMarkers();
+    QSqlTableModel::revertAll();
+}
+
+void FilmTableModel::clearChangeMarkers()
+{
     changedRows.clear();
     insertedRowsSeparatorIndex = QPersistentModelIndex();
-    return QSqlTableModel::submitAll();
+    emit headerDataChanged(Qt::Vertical, 0, rowCount() - 1);
 }
 
 int FilmTableModel::separatorRow() const

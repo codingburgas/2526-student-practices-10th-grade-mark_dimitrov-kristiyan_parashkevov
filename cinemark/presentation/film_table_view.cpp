@@ -39,15 +39,26 @@ void FilmTableView::insertRow()
 
 void FilmTableView::save()
 {
+    deleteSeparator();
+    model->submitAll();
+    model->select();
+}
+
+void FilmTableView::revertUnsaved()
+{
+    deleteSeparator();
+    model->revertAll();
+}
+
+void FilmTableView::deleteSeparator()
+{
     int separatorRow = model->separatorRow();
     if (separatorRow != -1)
     {
         view->setItemDelegateForRow(separatorRow, nullptr);
-        separator->deleteLater(); separator = nullptr;
+        separator->deleteLater();
+        separator = nullptr;
     }
-
-    model->submitAll();
-    model->select();
 }
 
 void FilmTableView::setModel(FilmTableModel* model)

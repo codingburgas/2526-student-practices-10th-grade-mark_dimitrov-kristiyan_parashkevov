@@ -20,6 +20,7 @@ public:
 
 public slots:
     bool submitAll();
+    void revertAll();
 
 private:
     FilmTableModel(QObject* parent = nullptr);
@@ -27,4 +28,5 @@ private:
 
     QPersistentModelIndex insertedRowsSeparatorIndex;
     QHash<QPersistentModelIndex, QHash<int, QHashDummyValue>> changedRows;
+    void clearChangeMarkers();
 };

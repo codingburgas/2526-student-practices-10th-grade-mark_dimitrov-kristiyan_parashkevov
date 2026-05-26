@@ -19,9 +19,12 @@ public:
 public slots:
     void insertRow();
     void save();
+    void revertUnsaved();
 
 private:
     SeparatorDelegate* separator = nullptr;
+    void deleteSeparator();
+
     QTableView* view;
     FilmTableModel* model;
 };

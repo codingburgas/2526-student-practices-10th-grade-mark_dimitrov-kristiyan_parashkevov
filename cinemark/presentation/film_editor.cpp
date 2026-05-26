@@ -12,13 +12,16 @@ FilmEditor::FilmEditor(QWidget* parent)
 {
     QIcon rowAddIcon = QIcon::fromTheme(QIcon::ThemeIcon::ListAdd);
     QIcon saveIcon = QIcon::fromTheme(QIcon::ThemeIcon::DocumentSave);
+    QIcon revertIcon = QIcon::fromTheme(QIcon::ThemeIcon::EditUndo);
 
     QPushButton* rowAddButton = new QPushButton(rowAddIcon, rowAddIcon.isNull() ? u"New"_s : QString());
     QPushButton* saveButton = new QPushButton(saveIcon, saveIcon.isNull() ? u"Save"_s : QString());
+    QPushButton* revertButton = new QPushButton(revertIcon, revertIcon.isNull() ? u"Revert"_s : QString());
     QHBoxLayout* actionBar = new QHBoxLayout;
     actionBar->addWidget(new QLineEdit);
     actionBar->addWidget(rowAddButton);
     actionBar->addWidget(saveButton);
+    actionBar->addWidget(revertButton);
 
     database::ConnectionParameters params = {"tcp:127.0.0.1", database::AuthenticationType::SqlPassword, "glaresheen", "CEaSa9b3Qa6HaYb9ba979aJ11VQI8a"};
     FilmTableModel* model = FilmTableModel::connect(params, this);
@@ -29,4 +32,5 @@ FilmEditor::FilmEditor(QWidget* parent)
 
     QObject::connect(rowAddButton, &QPushButton::clicked, table, &FilmTableView::insertRow);
     QObject::connect(saveButton, &QPushButton::clicked, table, &FilmTableView::save);
+    QObject::connect(revertButton, &QPushButton::clicked, table, &FilmTableView::revertUnsaved);
 }
