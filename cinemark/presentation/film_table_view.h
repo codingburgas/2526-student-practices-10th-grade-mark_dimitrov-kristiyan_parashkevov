@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QObject>
-#include <QPersistentModelIndex>
 
 class QLayout;
 class QTableView;
@@ -22,9 +21,7 @@ public slots:
     void save();
 
 private:
-    QPersistentModelIndex newRowsSeparatorIndex;
     SeparatorDelegate* separator = nullptr;
-
     QTableView* view;
     FilmTableModel* model;
 };

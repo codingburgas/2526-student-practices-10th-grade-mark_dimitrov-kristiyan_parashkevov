@@ -1,8 +1,8 @@
 #include "film_table_model.h"
+#include <QMetaEnum>
+#include <QStringBuilder>
 #include <QSqlDatabase>
 #include <QSqlQuery>
-#include <QStringBuilder>
-#include <QMetaEnum>
 using namespace Qt::StringLiterals;
 using namespace database;
 
@@ -46,30 +46,79 @@ bool FilmTableModel::ensureFilmsTable()
     return true;
 }
 
-bool FilmTableModel::setHeaderData(int row, Qt::Orientation orientation, const QVariant& value, int role)
+bool FilmTableModel::insertRows(int count, int, const QModelIndex&)
 {
-    if (orientation == Qt::Vertical)
+    if (insertedRowsSeparatorIndex.isValid())
+        return QSqlTableModel::insertRows(0, count);
+
+    if (QSqlTableModel::insertRows(0, count + 1))
     {
-        if (!value.toBool())
-        {
-            blankedHeaderRows.insert(row, QHashDummyValue());
-        }
-        else
-        {
-            blankedHeaderRows.remove(row);
-        }
+        insertedRowsSeparatorIndex = index(count, 0);
         return true;
     }
+    else
+    {
+        return false;
+    }
+}
 
-    return QSqlTableModel::setHeaderData(row, orientation, value, role);
+bool FilmTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+    if (!QSqlTableModel::setData(index, value, role))
+        return false;
+
+    QModelIndex rowIndex = this->index(index.row(), 0);
+    bool rowIsMarked = changedRows.contains(rowIndex);
+    bool differentFromOriginal = data(index, role) != QSqlQueryModel::data(index, role);
+
+    if (differentFromOriginal)
+    {
+        changedRows[rowIndex].insert(index.column(), QHashDummyValue());
+
+        if (!rowIsMarked)
+        {
+            emit headerDataChanged(Qt::Vertical, index.row(), index.row());
+        }
+    }
+    else if (rowIsMarked)
+    {
+        changedRows[rowIndex].remove(index.column());
+
+        if (changedRows[rowIndex].isEmpty())
+        {
+            changedRows.remove(rowIndex);
+            emit headerDataChanged(Qt::Vertical, index.row(), index.row());
+        }
+    }
+
+    return true;
 }
 
 QVariant FilmTableModel::headerData(int row, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Vertical && blankedHeaderRows.contains(row))
+    if (orientation == Qt::Vertical && role == Qt::DisplayRole)
     {
-        return QVariant();
+        if (row == separatorRow())
+        {
+            return QVariant();
+        }
+        if (changedRows.contains(index(row, 0)))
+        {
+            return "*"_L1;
+        }
     }
 
     return QSqlTableModel::headerData(row, orientation, role);
+}
+
+bool FilmTableModel::submitAll()
+{
+    changedRows.clear();
+    insertedRowsSeparatorIndex = QPersistentModelIndex();
+    return QSqlTableModel::submitAll();
+}
+
+int FilmTableModel::separatorRow() const
+{
+    return insertedRowsSeparatorIndex.row();
 }

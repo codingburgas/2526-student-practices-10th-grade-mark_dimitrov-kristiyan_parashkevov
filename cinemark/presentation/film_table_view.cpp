@@ -22,32 +22,32 @@ void FilmTableView::insertRow()
     if (!model)
         return;
 
-    if (!newRowsSeparatorIndex.isValid())
+    int separatorRow = model->separatorRow();
+    if (separatorRow == -1)
     {
-        model->insertRows(0, 2);
-
-        newRowsSeparatorIndex = model->index(1, 0);
+        model->insertRow();
         separator = new SeparatorDelegate(this);
-
         view->setItemDelegateForRow(1, separator);
-        model->setHeaderData(1, Qt::Vertical, false);
     }
     else
     {
-        view->setItemDelegateForRow(newRowsSeparatorIndex.row(), nullptr);
-        model->setHeaderData(newRowsSeparatorIndex.row(), Qt::Vertical, true);
-
-        model->insertRow(0);
-
-        view->setItemDelegateForRow(newRowsSeparatorIndex.row(), separator);
-        model->setHeaderData(newRowsSeparatorIndex.row(), Qt::Vertical, false);
+        view->setItemDelegateForRow(separatorRow, nullptr);
+        model->insertRow();
+        view->setItemDelegateForRow(model->separatorRow(), separator);
     }
 }
 
 void FilmTableView::save()
 {
-    // if dirty after save then don't remove separator?
-    // is it dirty when there are empty unsubmitted rows?
+    int separatorRow = model->separatorRow();
+    if (separatorRow != -1)
+    {
+        view->setItemDelegateForRow(separatorRow, nullptr);
+        separator->deleteLater(); separator = nullptr;
+    }
+
+    model->submitAll();
+    model->select();
 }
 
 void FilmTableView::setModel(FilmTableModel* model)
