@@ -7,8 +7,9 @@
 #include <QLineEdit>
 #include <QSpinBox>
 
-DatabaseConnectionDialog::DatabaseConnectionDialog()
-    : addressBox(new QLineEdit(this))
+DatabaseConnectionDialog::DatabaseConnectionDialog(QWidget* parent)
+    : QDialog(parent)
+    , addressBox(new QLineEdit(this))
     , portSpinBox(new QSpinBox(this))
     , authenticationTypeBox(new QComboBox(this))
     , usernameBox(new QLineEdit(this))
