@@ -23,12 +23,14 @@ DatabaseConnectionDialog::DatabaseConnectionDialog(QWidget* parent)
     }
 
     portSpinBox->setMaximum(65535);
+    portSpinBox->setValue(1433);
 
     QHBoxLayout* addressFieldsLayout = new QHBoxLayout;
     addressFieldsLayout->addWidget(addressBox);
     addressFieldsLayout->addWidget(portSpinBox);
 
     auto* buttonRow = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QObject::connect(buttonRow, &QDialogButtonBox::accepted, this, &QDialog::accept);
     QObject::connect(buttonRow, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
     QFormLayout* formLayout = new QFormLayout(this);
@@ -41,10 +43,12 @@ DatabaseConnectionDialog::DatabaseConnectionDialog(QWidget* parent)
 
 database::ConnectionParameters DatabaseConnectionDialog::createConnectionParameters() const
 {
+    QMetaEnum authenticationTypeEnum = QMetaEnum::fromType<database::AuthenticationType>();
+
     database::ConnectionParameters parameters;
     parameters.address = addressBox->text();
     parameters.port = portSpinBox->value();
-    parameters.authenticationType = (database::AuthenticationType)authenticationTypeBox->currentIndex();
+    parameters.authenticationType = (database::AuthenticationType)authenticationTypeEnum.value(authenticationTypeBox->currentIndex());
     parameters.username = usernameBox->text();
     parameters.password = passwordBox->text();
     return parameters;

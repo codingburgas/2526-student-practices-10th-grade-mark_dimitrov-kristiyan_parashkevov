@@ -4,7 +4,7 @@
 #include "separator_delegate.h"
 #include <QLayout>
 #include <QTableView>
-#include <QPersistentModelIndex>
+#include <QHeaderView>
 
 FilmTableView::FilmTableView(QLayout* layout, FilmTableModel* model)
     : QObject(layout)
@@ -12,7 +12,7 @@ FilmTableView::FilmTableView(QLayout* layout, FilmTableModel* model)
     , model(model)
 {
     view->setModel(model);
-    view->setItemDelegateForColumn(0, new ImagePathDelegate(view));
+    view->verticalHeader()->setDefaultSectionSize(150);
 
     layout->addWidget(view);
 }
@@ -65,4 +65,7 @@ void FilmTableView::setModel(FilmTableModel* model)
 {
     view->setModel(model);
     this->model = model;
+
+    view->hideColumn(0);
+    view->setItemDelegateForColumn(1, new ImagePathDelegate(view));
 }

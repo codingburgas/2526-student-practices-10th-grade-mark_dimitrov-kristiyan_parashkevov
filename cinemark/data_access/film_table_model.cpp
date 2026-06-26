@@ -3,6 +3,7 @@
 #include <QStringBuilder>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QSqlError>
 using namespace Qt::StringLiterals;
 using namespace database;
 
@@ -37,21 +38,22 @@ FilmTableModel* FilmTableModel::connect(const ConnectionParameters& params, QObj
 
 bool FilmTableModel::ensureFilmsTable()
 {
-    QSqlQuery(QStringLiteral(
+    return !QSqlQuery(QStringLiteral(
         "IF OBJECT_ID(N'Films', N'U') IS NULL "
         "CREATE TABLE Films ("
-        "   Id INT PRIMARY KEY IDENTITY()"
-        "   Poster NVARCHAR(MAX),"
-        "   Title NVARCHAR(MAX));"
+        "   Id INT PRIMARY KEY IDENTITY,"
+        "   Poster NVARCHAR(100),"
+        "   Title NVARCHAR(50));"
+        "IF OBJECT_ID(N'Users', N'U') IS NULL "
         "CREATE TABLE Users ("
-        "   Id INT PRIMARY KEY IDENTITY()"
-        "   Username NVARCHAR(20));"
+        "   Id INT PRIMARY KEY IDENTITY,"
+        "   Username NVARCHAR(20),"
+        "   Password NVARCHAR(100));"
+        "IF OBJECT_ID(N'Tickets', N'U') IS NULL "
         "CREATE TABLE Tickets ("
-        "   Id INT PRIMARY KEY IDENTITY()"
-        "   UserId INT FOREIGN KEY REFERENCES Users(Id)"
-        "   FilmId INT FOREIGN KEY REFERENCES Films(Id))"));
-
-    return true;
+        "   Id INT PRIMARY KEY IDENTITY,"
+        "   UserId INT FOREIGN KEY REFERENCES Users(Id),"
+        "   FilmId INT FOREIGN KEY REFERENCES Films(Id))")).lastError().isValid();
 }
 
 bool FilmTableModel::insertRows(int count, int, const QModelIndex&)

@@ -26,14 +26,12 @@ FilmEditor::FilmEditor(QWidget* parent)
     actionBar->addWidget(saveButton);
     actionBar->addWidget(revertButton);
 
-    database::ConnectionParameters params = {".\\SQLEXPRESS", database::AuthenticationType::Windows, "", ""};
     connectionDialog->open();
     QObject::connect(connectionDialog, &QDialog::accepted, this, &FilmEditor::connect);
-    FilmTableModel* model = FilmTableModel::connect(params, this);
 
     QVBoxLayout* screenLayout = new QVBoxLayout(this);
     screenLayout->addLayout(actionBar);
-    table = new FilmTableView(screenLayout, model);
+    table = new FilmTableView(screenLayout);
 
     QObject::connect(rowAddButton, &QPushButton::clicked, table, &FilmTableView::insertRow);
     QObject::connect(saveButton, &QPushButton::clicked, table, &FilmTableView::save);
