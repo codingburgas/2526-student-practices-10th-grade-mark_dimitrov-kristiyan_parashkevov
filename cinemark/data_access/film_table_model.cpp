@@ -40,8 +40,16 @@ bool FilmTableModel::ensureFilmsTable()
     QSqlQuery(QStringLiteral(
         "IF OBJECT_ID(N'Films', N'U') IS NULL "
         "CREATE TABLE Films ("
+        "   Id INT PRIMARY KEY IDENTITY()"
         "   Poster NVARCHAR(MAX),"
-        "   Title NVARCHAR(MAX))"));
+        "   Title NVARCHAR(MAX));"
+        "CREATE TABLE Users ("
+        "   Id INT PRIMARY KEY IDENTITY()"
+        "   Username NVARCHAR(20));"
+        "CREATE TABLE Tickets ("
+        "   Id INT PRIMARY KEY IDENTITY()"
+        "   UserId INT FOREIGN KEY REFERENCES Users(Id)"
+        "   FilmId INT FOREIGN KEY REFERENCES Films(Id))"));
 
     return true;
 }
