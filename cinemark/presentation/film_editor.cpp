@@ -2,6 +2,7 @@
 #include "film_table_model.h"
 #include "film_table_view.h"
 #include "database_connection_dialog.h"
+#include "db_connection_parameters.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPushButton>
@@ -25,15 +26,22 @@ FilmEditor::FilmEditor(QWidget* parent)
     actionBar->addWidget(saveButton);
     actionBar->addWidget(revertButton);
 
-    database::ConnectionParameters params = {"tcp:127.0.0.1", database::AuthenticationType::SqlPassword, "glaresheen", "CEaSa9b3Qa6HaYb9ba979aJ11VQI8a"};
+    database::ConnectionParameters params = {".\\SQLEXPRESS", database::AuthenticationType::Windows, "", ""};
     connectionDialog->open();
+    QObject::connect(connectionDialog, &QDialog::accepted, this, &FilmEditor::connect);
     FilmTableModel* model = FilmTableModel::connect(params, this);
 
     QVBoxLayout* screenLayout = new QVBoxLayout(this);
     screenLayout->addLayout(actionBar);
-    FilmTableView* table = new FilmTableView(screenLayout, model);
+    table = new FilmTableView(screenLayout, model);
 
     QObject::connect(rowAddButton, &QPushButton::clicked, table, &FilmTableView::insertRow);
     QObject::connect(saveButton, &QPushButton::clicked, table, &FilmTableView::save);
     QObject::connect(revertButton, &QPushButton::clicked, table, &FilmTableView::revertUnsaved);
+}
+
+void FilmEditor::connect()
+{
+    database::ConnectionParameters connectionParameters = connectionDialog->createConnectionParameters();
+    table->setModel(FilmTableModel::connect(connectionParameters));
 }

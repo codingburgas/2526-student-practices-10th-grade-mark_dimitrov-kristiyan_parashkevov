@@ -1,4 +1,5 @@
 #pragma once
+#include "db_connection_parameters.h"
 #include <QDialog>
 
 class QComboBox;
@@ -8,7 +9,9 @@ class QSpinBox;
 class DatabaseConnectionDialog : public QDialog
 {
 public:
-    DatabaseConnectionDialog();
+    explicit DatabaseConnectionDialog(QWidget* parent = nullptr);
+
+    database::ConnectionParameters createConnectionParameters() const;
 
 private:
     QLineEdit* addressBox;
