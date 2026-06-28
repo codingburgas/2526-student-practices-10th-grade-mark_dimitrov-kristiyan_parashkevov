@@ -42,7 +42,9 @@ bool FilmTableModel::deleteRow(int row)
     if (row == separatorRow() || row > rowCount() - 1 || row < 0)
         return false;
 
-    return removeRow(row);
+    bool result = removeRow(row);
+    emit headerDataChanged(Qt::Vertical, row, row);
+    return result;
 }
 
 bool FilmTableModel::setData(const QModelIndex& index, const QVariant& value, int role)

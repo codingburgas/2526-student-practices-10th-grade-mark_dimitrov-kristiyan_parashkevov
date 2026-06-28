@@ -48,13 +48,15 @@ void FilmTableView::insertRow()
 
 void FilmTableView::createContextMenu(const QPoint& location)
 {
+    QPoint globalLocation = view->mapToGlobal(location);
+
     QMenu menu(view);
     menu.addActions(view->actions());
-    QAction* action = menu.exec(location);
+    QAction* action = menu.exec(globalLocation);
 
-    if (action->text() == "Delete Film")
+    if (action && action->text() == "Delete Film")
     {
-        deleteRow(view->rowAt(location.y()));
+        deleteRow(view->rowAt(globalLocation.y()));
     }
 }
 
