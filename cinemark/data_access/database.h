@@ -6,8 +6,9 @@
 class Database
 {
 public:
-    static bool ensureDefaultConnection(const database::ConnectionParameters& = {"localhost", database::SqlPassword, "glaresheen", "2PGn0vxiaV"});
+    static bool ensureDefaultConnection(const database::ConnectionParameters& = {"localhost\\SQLEXPRESS", database::Windows});
 
 private:
     static QString buildConnectionString(const database::ConnectionParameters&);
+    static bool ensureDefaultTables();
 };

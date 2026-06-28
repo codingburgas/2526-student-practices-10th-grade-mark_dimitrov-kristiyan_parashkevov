@@ -23,7 +23,7 @@ struct ConnectionParameters
     AuthenticationType authenticationType;
     QString username;
     QString password;
-    int port = 1433;
+    int port = -1;
 };
 
 }

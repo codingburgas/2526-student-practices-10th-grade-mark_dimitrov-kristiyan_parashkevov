@@ -1,9 +1,5 @@
 #include "film_table_model.h"
-#include <QMetaEnum>
-#include <QStringBuilder>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlError>
+#include "database.h"
 using namespace Qt::StringLiterals;
 using namespace database;
 
@@ -17,46 +13,12 @@ FilmTableModel::FilmTableModel(QObject* parent)
 
 FilmTableModel* FilmTableModel::connect(const ConnectionParameters& params, QObject* parent)
 {
-    auto buildConnectionString = [&params]() -> QString
-    {
-        return u"Driver=ODBC Driver 18 for SQL Server;"
-               u"Server="_s % params.address % QChar(',') % QString::number(params.port) %
-               u";Encrypt=yes;TrustServerCertificate=yes;"_s %
-               (params.authenticationType == Windows ? u"Trusted_Connection=yes"_s : u"Authentication="_s % QMetaEnum::fromType<AuthenticationType>().valueToKey(params.authenticationType));
-    };
-
-    QSqlDatabase connection = QSqlDatabase::addDatabase(u"QODBC"_s);
-    connection.setDatabaseName(buildConnectionString());
-
-    if (!connection.open(params.username, params.password) || !ensureFilmsTable())
+    if (!Database::ensureDefaultConnection(params))
     {
         return nullptr;
     }
 
     return new FilmTableModel(parent);
-}
-
-bool FilmTableModel::ensureFilmsTable()
-{
-    return !QSqlQuery(QStringLiteral(
-        "IF OBJECT_ID(N'Films', N'U') IS NULL "
-        "CREATE TABLE Films ("
-        "   Id INT PRIMARY KEY IDENTITY,"
-        "   Poster NVARCHAR(90),"
-        "   Title NVARCHAR(40),"
-        "   Genre NVARCHAR(20),"
-        "   Projection NVARCHAR(20));"
-        "IF OBJECT_ID(N'Users', N'U') IS NULL "
-        "CREATE TABLE Users ("
-        "   Id INT PRIMARY KEY IDENTITY,"
-        "   Username NVARCHAR(20),"
-        "   Password NVARCHAR(100));"
-        "IF OBJECT_ID(N'Tickets', N'U') IS NULL "
-        "CREATE TABLE Tickets ("
-        "   Id INT PRIMARY KEY IDENTITY,"
-        "   UserId INT FOREIGN KEY REFERENCES Users(Id),"
-        "   FilmId INT FOREIGN KEY REFERENCES Films(Id),"
-        "   SeatNumber INT)")).lastError().isValid();
 }
 
 bool FilmTableModel::insertRows(int count, int, const QModelIndex&)
