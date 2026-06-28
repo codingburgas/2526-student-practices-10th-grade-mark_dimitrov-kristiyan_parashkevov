@@ -37,6 +37,14 @@ bool FilmTableModel::insertRows(int count, int, const QModelIndex&)
     }
 }
 
+bool FilmTableModel::deleteRow(int row)
+{
+    if (row == separatorRow() || row > rowCount() - 1 || row < 0)
+        return false;
+
+    return removeRow(row);
+}
+
 bool FilmTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
     if (!QSqlTableModel::setData(index, value, role))

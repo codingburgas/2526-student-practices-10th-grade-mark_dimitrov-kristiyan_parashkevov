@@ -2,6 +2,7 @@
 #include "film_table_model.h"
 #include "image_path_delegate.h"
 #include "separator_delegate.h"
+#include <QMenu>
 #include <QLayout>
 #include <QTableView>
 #include <QHeaderView>
@@ -13,6 +14,11 @@ FilmTableView::FilmTableView(QLayout* layout, FilmTableModel* model)
 {
     view->setModel(model);
     view->verticalHeader()->setDefaultSectionSize(150);
+    view->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(view, &QTableView::customContextMenuRequested, this, &FilmTableView::createContextMenu);
+
+    QAction* deleteAction = new QAction(QIcon::fromTheme(QIcon::ThemeIcon::EditDelete), "Delete Film", view);
+    view->addAction(deleteAction);
 
     layout->addWidget(view);
 }
@@ -38,6 +44,26 @@ void FilmTableView::insertRow()
         view->setItemDelegateForRow(model->separatorRow(), separator);
         view->resizeRowToContents(model->separatorRow());
     }
+}
+
+void FilmTableView::createContextMenu(const QPoint& location)
+{
+    QMenu menu(view);
+    menu.addActions(view->actions());
+    QAction* action = menu.exec(location);
+
+    if (action->text() == "Delete Film")
+    {
+        deleteRow(view->rowAt(location.y()));
+    }
+}
+
+void FilmTableView::deleteRow(int row)
+{
+    if (!model)
+        return;
+
+    model->deleteRow(row);
 }
 
 void FilmTableView::save()

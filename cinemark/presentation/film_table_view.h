@@ -18,8 +18,12 @@ public:
 
 public slots:
     void insertRow();
+    void deleteRow(int row);
     void save();
     void revertUnsaved();
+
+private slots:
+    void createContextMenu(const QPoint&);
 
 private:
     SeparatorDelegate* separator = nullptr;
