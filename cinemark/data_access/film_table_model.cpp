@@ -42,8 +42,10 @@ bool FilmTableModel::ensureFilmsTable()
         "IF OBJECT_ID(N'Films', N'U') IS NULL "
         "CREATE TABLE Films ("
         "   Id INT PRIMARY KEY IDENTITY,"
-        "   Poster NVARCHAR(100),"
-        "   Title NVARCHAR(50));"
+        "   Poster NVARCHAR(90),"
+        "   Title NVARCHAR(40),"
+        "   Genre NVARCHAR(20),"
+        "   Projection NVARCHAR(20));"
         "IF OBJECT_ID(N'Users', N'U') IS NULL "
         "CREATE TABLE Users ("
         "   Id INT PRIMARY KEY IDENTITY,"
@@ -53,7 +55,8 @@ bool FilmTableModel::ensureFilmsTable()
         "CREATE TABLE Tickets ("
         "   Id INT PRIMARY KEY IDENTITY,"
         "   UserId INT FOREIGN KEY REFERENCES Users(Id),"
-        "   FilmId INT FOREIGN KEY REFERENCES Films(Id))")).lastError().isValid();
+        "   FilmId INT FOREIGN KEY REFERENCES Films(Id),"
+        "   SeatNumber INT)")).lastError().isValid();
 }
 
 bool FilmTableModel::insertRows(int count, int, const QModelIndex&)

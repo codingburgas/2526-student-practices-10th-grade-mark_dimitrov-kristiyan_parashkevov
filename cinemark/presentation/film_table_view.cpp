@@ -28,12 +28,15 @@ void FilmTableView::insertRow()
         model->insertRow();
         separator = new SeparatorDelegate(this);
         view->setItemDelegateForRow(1, separator);
+        view->resizeRowToContents(1);
     }
     else
     {
         view->setItemDelegateForRow(separatorRow, nullptr);
+        view->verticalHeader()->resizeSection(separatorRow, 150);
         model->insertRow();
         view->setItemDelegateForRow(model->separatorRow(), separator);
+        view->resizeRowToContents(model->separatorRow());
     }
 }
 
@@ -56,6 +59,7 @@ void FilmTableView::deleteSeparator()
     if (separatorRow != -1)
     {
         view->setItemDelegateForRow(separatorRow, nullptr);
+        view->verticalHeader()->resizeSection(separatorRow, 150);
         separator->deleteLater();
         separator = nullptr;
     }
